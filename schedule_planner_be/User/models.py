@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from Role.models import Role
+#from Role.models import Role
 
 
 class User(models.Model):
@@ -14,7 +14,7 @@ class User(models.Model):
             code='invalid_email'
         ),
     ])
-    role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.SET_NULL, null=True) #protect
+    #role = models.ForeignKey(Role, verbose_name="Роль", on_delete=models.SET_NULL, null=True) #protect
 
     def __str__(self):
         return f'{self.fist_name} {self.last_name} : {self.role}'
