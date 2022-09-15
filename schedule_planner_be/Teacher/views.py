@@ -16,7 +16,7 @@ class TeacherListView(LoginRequiredMixin, ListView):
     template_name = 'Teacher/teacher_list.html'
 
     def get_queryset(self):
-        teachers = Teacher.objects.filter(is_active=True)
+        teachers = Teacher.objects.all()
         return teachers
 
 
@@ -26,7 +26,7 @@ class TeacherDetailView(LoginRequiredMixin, DetailView):
     template_name = 'Teacher/teacher_detail.html'
 
     def get_queryset(self):
-        teachers = Teacher.objects.filter(is_active=True)
+        teachers = Teacher.objects.all()
         return teachers
 
 
