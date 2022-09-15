@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 class TeacherListView(generics.ListAPIView):
     """Вывод списка преподавателей"""
     serializer_class = TeacherListSerializer
-    queryset = Teacher.objects.filter(is_active=True)
+    queryset = Teacher.objects.all()
     permission_classes = [IsAuthenticated]
 
 
