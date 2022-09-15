@@ -15,7 +15,7 @@ class TeacherListView(generics.ListAPIView):
 
 class TeacherDetailsView(generics.RetrieveAPIView):
     """Вывод полного описания преподавателя"""
-    queryset = Teacher.objects.filter(is_active=True)
+    queryset = Teacher.objects.all()
     serializer_class = TeacherDetailSerializer
     permission_classes = [IsAuthenticated & TeacherPermissionsMixin]
 
