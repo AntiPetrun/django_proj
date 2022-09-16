@@ -36,7 +36,7 @@ class Course(models.Model):
     """Creates model Course"""
     # prepopulated_fields = {"course_type": ("start_time", )}
     course_name = models.CharField("Course name", max_length=50)
-    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, limit_choices_to={'is_active': True}, null=True, blank=True)
     start_date = models.DateField("Course start date", default=date.today)
     start_day_of_week = models.CharField("Start day of week", max_length=200, default="", blank=True,
                                          help_text="The field will be filled in automatically after saving")
@@ -420,7 +420,8 @@ class Lesson(models.Model):
     number = models.PositiveSmallIntegerField("Number")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     location = models.ForeignKey("schedule.Classroom", on_delete=models.SET_NULL, null=True, blank=True)
-    teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.SET_NULL, null=True, blank=True)
+    teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.SET_NULL,
+                                limit_choices_to={'is_active': True}, null=True, blank=True)
     topic = models.CharField(max_length=100, blank=True)
     description = models.TextField("Description", blank=True)
     date = models.DateField("Date", default=date.today)
