@@ -13,7 +13,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ["date", "start_time", "number", "course", "topic",
+    list_display = ["date", "start_time", "number", "course", 'teacher', "topic",
                     "description", "for_time_slot", "is_start_day", "is_end_day", "is_transit_day_1",
                     "is_transit_day_2"]
     ordering = ["number"]
