@@ -172,7 +172,7 @@ def delete_cl_av_for_deleted_classrooms(sender, instance, **kwargs):
     ClassroomAvailability.objects.filter(classroom=address).delete()
 
 
-@receiver(connection_created)
+@receiver(post_save, sender=Course)
 def create_cl_av_for_90_days_period(sender, *args, **kwargs):
     """"Updates classroom availabilities for 90 days period"""
     classrooms = Classroom.objects.all()
