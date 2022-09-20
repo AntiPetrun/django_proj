@@ -4,10 +4,10 @@
 {% block title %}Добавить место проведения курсов :: Локации{% endblock %}
 
 {% block content %}
-<h1>Добавить локации</h1>
+<h1>Добавить локацию</h1>
 <form action='' method='post'>
     {% csrf_token %}
     {{ form|crispy }}
-    <input type='submit' value='Добавить'>
+    <input type='submit' value='Add'>
 </form>
 {% endblock %}

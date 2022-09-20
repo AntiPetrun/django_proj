@@ -4,10 +4,10 @@
 {% block title %}Обновить информацию об аудитории :: Метро{% endblock %}
 
 {% block content %}
-<h1>Обновить информацию по аудитории</h1>
+<h1>Обновить информацию об аудитории</h1>
 <form action='' method='post'>
     {% csrf_token %}
     {{ form|crispy }}
-    <input type='submit' value='Обновить'>
+    <input type='submit' value='Save changes'>
 </form>
 {% endblock %}

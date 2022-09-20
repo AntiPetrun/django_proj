@@ -25,7 +25,7 @@ class Location(models.Model):
     city = models.CharField('City', max_length=50)
     street = models.CharField('Street', max_length=50)
     building = models.CharField('Building', max_length=10, default=None)
-    subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True, verbose_name='Станции метро')
+    subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.street}, {self.building}, {self.subway}, {self.city}"
