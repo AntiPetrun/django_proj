@@ -9,13 +9,13 @@ from rest_framework.permissions import IsAuthenticated
 class TeacherListView(generics.ListAPIView):
     """Вывод списка преподавателей"""
     serializer_class = TeacherListSerializer
-    queryset = Teacher.objects.filter(is_active=True)
+    queryset = Teacher.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class TeacherDetailsView(generics.RetrieveAPIView):
     """Вывод полного описания преподавателя"""
-    queryset = Teacher.objects.filter(is_active=True)
+    queryset = Teacher.objects.all()
     serializer_class = TeacherDetailSerializer
     permission_classes = [IsAuthenticated & TeacherPermissionsMixin]
 
@@ -27,7 +27,7 @@ class TeacherCreateView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated & TeacherPermissionsMixin]
 
 
-class TeacherUpdateView(generics.RetrieveAPIView, generics.UpdateAPIView):
+class TeacherUpdateView(generics.UpdateAPIView):
     """Изменение преподавателя"""
     queryset = Teacher.objects.filter(is_active=True)
     serializer_class = TeacherUpdateSerializer
