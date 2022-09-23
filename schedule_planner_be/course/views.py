@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from Teacher.models import Teacher
 from .models import Course, Comment, Lesson
 
+
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .permissions import LessonPermissionsMixin

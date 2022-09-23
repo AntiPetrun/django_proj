@@ -38,7 +38,7 @@ class Location(models.Model):
 class Classroom(models.Model):
     """Creates model Classroom"""
     classroom = models.CharField('Classroom', max_length=10)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, verbose_name='Location address')
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
 
@@ -172,6 +172,8 @@ def delete_cl_av_for_deleted_classrooms(sender, instance, **kwargs):
     ClassroomAvailability.objects.filter(classroom=address).delete()
 
 
+# Comment to run a scheduled tasks to update classroom availabilities for 90 days period on celery.
+# Uncomment related code parts in __init__.py, celery.py, service.py, settings.py, tasks.py
 @receiver(post_save, sender=Course)
 def create_cl_av_for_90_days_period(sender, *args, **kwargs):
     """"Updates classroom availabilities for 90 days period"""
