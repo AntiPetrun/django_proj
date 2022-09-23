@@ -176,3 +176,18 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=240),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1)
 }
+
+# # Uncomment to run a scheduled tasks to update classroom availabilities for 90 days period on celery.
+# # Comment related code part in models.py starting with.
+# # @receiver(post_save, sender=Course)
+# # def create_cl_av_for_90_days_period(sender, *args, **kwargs):
+# # Redis related settings
+# REDIS_HOST = '127.0.0.1'
+# REDIS_PORT = '6379'
+# CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+# CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+# CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+

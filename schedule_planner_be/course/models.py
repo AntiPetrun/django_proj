@@ -151,7 +151,8 @@ class Course(models.Model):
 
     start_time_options = models.ForeignKey(ClassroomAvailability, on_delete=models.SET_NULL, null=True, default='',
                                            blank=True)
-    start_time = models.CharField("Start time", choices=START_TIME_OPTIONS, max_length=9)
+    start_time = models.CharField("Start time", choices=START_TIME_OPTIONS, max_length=9,
+                                  help_text="Enter start time. Consider the availability of the classroom in the field above.")
     end_time = models.TimeField("End time", null=True, blank=True,
                                 help_text="The field will be filled in automatically after saving")
     number_of_lessons = models.PositiveSmallIntegerField("Number of lessons", validators=[MaxValueValidator(50)])

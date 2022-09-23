@@ -3,9 +3,16 @@ from django.contrib.auth.tokens import default_token_generator as token_generato
 from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.views import LoginView, PasswordResetConfirmView
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render, resolve_url
+from django.utils.decorators import method_decorator
 from django.utils.http import urlsafe_base64_decode
 from django.views import generic, View
+from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.debug import sensitive_post_parameters
+
+from schedule_planner_be import settings
 from .forms import UserCreationForm, UserAuthenticationForm, MySetPasswordForm
 from .service import send
 import pytz
