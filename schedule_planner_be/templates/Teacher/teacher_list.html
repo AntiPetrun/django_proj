@@ -18,6 +18,7 @@
                 <tr>
                     <th scope="col">Full name</th>
                     <th scope="col">Specialization</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Teaching course</th>
                     <th scope="col">Teacher Profile</th>
                 </tr>
@@ -27,6 +28,7 @@
                 <tr>
                     <td>{{ teacher }} {{ teacher.fathers_name }}</td>
                     <td>{{ teacher.specialization }}</td>
+                    <td>{{ teacher.is_active }}</td>
                     <td>{{ teacher.course_name }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'teacher_detail' teacher.pk %}">View</a></button>
@@ -39,6 +41,6 @@
         </table>
     </div>
 {% else %}
-    <p>Курсы пока отсутствуют.</p>
+    <p>Преподаватели пока отсутствуют.</p>
 {% endif %}
 {% endblock %}
