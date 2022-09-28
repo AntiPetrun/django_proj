@@ -191,6 +191,8 @@ class Course(models.Model):
         # self.choices = self.start_time_options
         self.all_course_dates = self.all_course_days
         self.end_time = self.find_end_time
+        if self.lesson_duration == 2 and self.start_time == "21:00" or self.lesson_duration == 3 and self.start_time in ["20:00", "21:00"]:
+            raise ValueError('Change your start time for earlier or lesson duration for less.')
         super(Course, self).save(*args, **kwargs)
 
     def __str__(self):
