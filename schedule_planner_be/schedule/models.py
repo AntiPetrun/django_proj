@@ -26,14 +26,14 @@ class Location(models.Model):
     """"Creates model Location"""
     city = models.CharField('City', max_length=50, validators=[RegexValidator(
             regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
-            message=_('Use Russian alphabet only'),
-            code=_('Use Russian alphabet only'))]
+            message=_('Use Russian alphabet only, 50 symbols max'),
+            code=_('Use Russian alphabet only, 50 symbols max'))]
         )
     street = models.CharField('Street', max_length=50, validators=[
         RegexValidator(
             regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
-            message=_('Use Russian alphabet only'),
-            code=_('Use Russian alphabet only')
+            message=_('Use Russian alphabet only, 50 symbols max'),
+            code=_('Use Russian alphabet only, 50 symbols max')
         )])
     building = models.CharField('Building', max_length=10, default=None)
     subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
@@ -49,7 +49,11 @@ class Location(models.Model):
 
 class Classroom(models.Model):
     """Creates model Classroom"""
-    classroom = models.CharField('Classroom', max_length=10)
+    classroom = models.CharField('Classroom', max_length=50, validators=[RegexValidator(
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            message=_('Use Russian alphabet only, 50 symbols max'),
+            code=_('Use Russian alphabet only, 50 symbols max')
+        )])
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, verbose_name='Location address')
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
