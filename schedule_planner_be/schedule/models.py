@@ -42,6 +42,7 @@ class Location(models.Model):
             code=_('Use Russian alphabet only, 50 symbols max')
         )], default=None)
     subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
+    is_active = models.BooleanField("Active", default=True)
 
     def __str__(self):
         return f"{self.street}, {self.building}, {self.subway}, {self.city}"
@@ -59,7 +60,8 @@ class Classroom(models.Model):
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max')
         )])
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, verbose_name='Location address')
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, limit_choices_to={'is_active': True},
+                                 null=True, verbose_name='Location address')
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
     is_active = models.BooleanField("Active", default=True, blank=True, null=True)
