@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta, date
 
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.backends.signals import connection_created
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from course.models import Course, Comment, ClassroomAvailability, Lesson
+from django.utils.translation import gettext_lazy as _
 
 
 class SubwayStation(models.Model):
@@ -22,8 +24,17 @@ class SubwayStation(models.Model):
 
 class Location(models.Model):
     """"Creates model Location"""
-    city = models.CharField('City', max_length=50)
-    street = models.CharField('Street', max_length=50)
+    city = models.CharField('City', max_length=50, validators=[RegexValidator(
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            message=_('Use Russian alphabet only'),
+            code=_('Use Russian alphabet only'))]
+        )
+    street = models.CharField('Street', max_length=50, validators=[
+        RegexValidator(
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            message=_('Use Russian alphabet only'),
+            code=_('Use Russian alphabet only')
+        )])
     building = models.CharField('Building', max_length=10, default=None)
     subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
 
