@@ -17,6 +17,7 @@
 2. [Technologies](#technologies)
 3. [Installation](#installation)
 4. [FAQs](#faqs)
+5. [Updating classroom availabilities](#Updating-classroom-availabilities)
 ### General Info
 ***
 **Academy Schedule planner web-application.** 
@@ -72,3 +73,11 @@ Answer to the third question with *italic words*.
 | Headline 1 in the tablehead | Headline 2 in the tablehead | Headline 3 in the tablehead |
 |:--------------|:-------------:|--------------:|
 | text-align left | text-align center | text-align right |
+
+## Updating classroom availabilities
+***
+To switch from updating classroom availabilities on Course post-save basis to updating them with celery/redis:
+1. Comment in schedule_planner_be/schedule/models the func starting with 
+@receiver(post_save, sender=Course):...
+def create_cl_av_for_90_days_period(sender, *args, **kwargs)
+2. In app schedule_planner_be check the folders __init__, celery, service, settings, tasks and uncomment all related code parts.
