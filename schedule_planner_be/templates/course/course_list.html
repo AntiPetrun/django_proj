@@ -36,13 +36,12 @@
                     <td>{{ course.course_name }}</td>
                     <td>{{ course.course_type }}</td>
                     <td>{{ course.start_date }}</td>
-                    <td>{{ course.start_day_of_week }}</td>
+                    <td>{{ course.days_of_week }}</td>
                     <td>{{ course.start_time }}</td>
                     <td>{{ course.location }}</td>
+                    <td>{{ course.number_of_lessons }}</td>
                     <td>
-                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'course_by_lessons' course.pk %}">{{ course.number_of_lessons }} lessons</a></button>
-                    </td>
-                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comment_form' %}">Add comment</a></button>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comments_by_course' course.pk %}">View comments</a></button>
                     </td>
                     <td>
