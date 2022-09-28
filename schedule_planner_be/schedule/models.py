@@ -38,8 +38,8 @@ class Location(models.Model):
     building = models.CharField('Building', max_length=10, validators=[
         RegexValidator(
             regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
-            message=_('Use Russian alphabet only, 50 symbols max'),
-            code=_('Use Russian alphabet only, 50 symbols max')
+            message=_('Use Russian alphabet only, 10 symbols max'),
+            code=_('Use Russian alphabet only, 10 symbols max')
         )], default=None)
     subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField("Active", default=True)
