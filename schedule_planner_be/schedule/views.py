@@ -3,9 +3,12 @@ from django.views.generic import ListView, CreateView, DetailView, DeleteView, U
 from .forms import ScheduleForm, LocationForm, SubwayStationForm, ClassroomForm
 from .models import Location, SubwayStation, Schedule, Classroom
 from course.models import Course, Comment
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 import csv
 from django.http import HttpResponse
+
+from .permissions import LocationPermissionsMixin
 
 
 class ScheduleListView(ListView):
@@ -48,12 +51,12 @@ class ScheduleCreateView(CreateView):
         return context
 
 
-class LocationListView(ListView):
+class LocationListView(LoginRequiredMixin, ListView):
     template_name = 'schedule/locations.html'
     model = Location
 
 
-class LocationUpdateView(UpdateView):
+class LocationUpdateView(LoginRequiredMixin, LocationPermissionsMixin, UpdateView):
     template_name = 'schedule/edit-location.html'
     model = Location
     form_class = LocationForm
@@ -62,7 +65,7 @@ class LocationUpdateView(UpdateView):
         return reverse_lazy('location-detail', args=(self.object.id,))
 
 
-class LocationDeleteView(DeleteView):
+class LocationDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-location.html'
     model = Location
     success_url = reverse_lazy('locations')
@@ -73,7 +76,7 @@ class LocationDetailView(DetailView):
     model = Location
 
 
-class LocationCreateView(CreateView):
+class LocationCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateView):
     template_name = 'schedule/add-location.html'
     form_class = LocationForm
 
@@ -86,12 +89,12 @@ class LocationCreateView(CreateView):
         return context
 
 
-class SubwayStationListView(ListView):
+class SubwayStationListView(LoginRequiredMixin, ListView):
     template_name = 'schedule/subways.html'
     model = SubwayStation
 
 
-class SubwayStationUpdateView(UpdateView):
+class SubwayStationUpdateView(LoginRequiredMixin, LocationPermissionsMixin, UpdateView):
     template_name = 'schedule/edit-subway.html'
     model = SubwayStation
     form_class = SubwayStationForm
@@ -100,18 +103,18 @@ class SubwayStationUpdateView(UpdateView):
         return reverse_lazy('subway-detail', args=(self.object.id,))
 
 
-class SubwayStationDeleteView(DeleteView):
+class SubwayStationDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-subway.html'
     model = SubwayStation
     success_url = reverse_lazy('subways')
 
 
-class SubwayStationDetailView(DetailView):
+class SubwayStationDetailView(LoginRequiredMixin, DetailView):
     template_name = 'schedule/subway-detail.html'
     model = SubwayStation
 
 
-class SubwayStationCreateView(CreateView):
+class SubwayStationCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateView):
     template_name = 'schedule/add-subway.html'
     form_class = SubwayStationForm
 
@@ -119,12 +122,12 @@ class SubwayStationCreateView(CreateView):
         return reverse_lazy('subway-detail', args=(self.object.id,))
 
 
-class ClassroomListView(ListView):
+class ClassroomListView(LoginRequiredMixin, ListView):
     template_name = 'schedule/classrooms.html'
     model = Classroom
 
 
-class ClassroomUpdateView(UpdateView):
+class ClassroomUpdateView(LoginRequiredMixin, LocationPermissionsMixin, UpdateView):
     template_name = 'schedule/edit-classroom.html'
     model = Classroom
     form_class = ClassroomForm
@@ -133,18 +136,18 @@ class ClassroomUpdateView(UpdateView):
         return reverse_lazy('classroom-detail', args=(self.object.id,))
 
 
-class ClassroomDeleteView(DeleteView):
+class ClassroomDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-classroom.html'
     model = Classroom
     success_url = reverse_lazy('classrooms')
 
 
-class ClassroomDetailView(DetailView):
+class ClassroomDetailView(LoginRequiredMixin, DetailView):
     template_name = 'schedule/classroom-detail.html'
     model = Classroom
 
 
-class ClassroomCreateView(CreateView):
+class ClassroomCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateView):
     template_name = 'schedule/add-classroom.html'
     form_class = ClassroomForm
 
