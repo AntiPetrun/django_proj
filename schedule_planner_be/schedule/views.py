@@ -71,7 +71,7 @@ class LocationDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteVie
     success_url = reverse_lazy('locations')
 
 
-class LocationDetailView(DetailView):
+class LocationDetailView(LoginRequiredMixin, DetailView):
     template_name = 'schedule/location-detail.html'
     model = Location
 
