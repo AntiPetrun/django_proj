@@ -388,7 +388,7 @@ def create_lessons(sender, instance, **kwargs):
 
 class Comment(models.Model):
     """Creates model Comment"""
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, default='')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, limit_choices_to={'is_active': True}, default='')
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default='')
     body = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
