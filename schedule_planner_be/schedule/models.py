@@ -33,6 +33,7 @@ class Location(models.Model):
     class Meta:
         verbose_name = 'Локация'
         verbose_name_plural = 'Локации'
+        unique_together = ('city', 'street', 'building', 'subway')
 
 
 class Classroom(models.Model):
