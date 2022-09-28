@@ -25,19 +25,19 @@ class SubwayStation(models.Model):
 class Location(models.Model):
     """"Creates model Location"""
     city = models.CharField('City', max_length=50, validators=[RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max'))]
         )
     street = models.CharField('Street', max_length=50, validators=[
         RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max')
         )])
     building = models.CharField('Building', max_length=10, validators=[
         RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max')
         )], default=None)
@@ -56,7 +56,7 @@ class Location(models.Model):
 class Classroom(models.Model):
     """Creates model Classroom"""
     classroom = models.CharField('Classroom', max_length=50, validators=[RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max')
         )])
