@@ -64,6 +64,7 @@
                     <th scope="col">Comment</th>
                     <th scope="col">Comments to lesson</th>
                     <th scope="col">Actions to lesson</th>
+                    <th scope="col">Actions to course</th>
                 </tr>
             </thead>
             {% for lesson in lesson_list %}
@@ -86,6 +87,10 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'lesson_detail' lesson.pk %}">View</a></button>
                             <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'lesson_edit' lesson.pk %}">Edit</a></button>
                             <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'lesson_confirm_delete' lesson.pk %}">Delete</a></button>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'course_detail' lesson.course.pk %}">View</a></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'course_edit' lesson.course.pk %}">Edit</a></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'course_confirm_delete' lesson.course.pk %}">Delete</a></button>
                         </td>
                     </tr>
                 </tbody>
