@@ -35,7 +35,12 @@ class Location(models.Model):
             message=_('Use Russian alphabet only, 50 symbols max'),
             code=_('Use Russian alphabet only, 50 symbols max')
         )])
-    building = models.CharField('Building', max_length=10, default=None)
+    building = models.CharField('Building', max_length=10, validators=[
+        RegexValidator(
+            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я-\s]{1,50}$",
+            message=_('Use Russian alphabet only, 50 symbols max'),
+            code=_('Use Russian alphabet only, 50 symbols max')
+        )], default=None)
     subway = models.ForeignKey(SubwayStation, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
