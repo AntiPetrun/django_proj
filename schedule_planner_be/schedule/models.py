@@ -42,6 +42,7 @@ class Classroom(models.Model):
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, verbose_name='Location address')
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
+    is_active = models.BooleanField("Active", default=True, blank=True, null=True)
 
     def __str__(self):
         return f"ауд. {self.classroom}, {self.location}"

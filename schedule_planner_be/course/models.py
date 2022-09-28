@@ -130,7 +130,8 @@ class Course(models.Model):
         all_course_days = [i for i in all_course_days]
         return all_course_days
 
-    location = models.ForeignKey("schedule.Classroom", on_delete=models.SET_NULL, null=True)
+    location = models.ForeignKey("schedule.Classroom", on_delete=models.SET_NULL,
+                                 limit_choices_to={'is_active': True}, null=True)
 
     START_TIME_OPTIONS = [
         ("08:00", "08:00"),
