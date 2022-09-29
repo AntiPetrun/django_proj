@@ -8,7 +8,7 @@ class LessonPermissionsMixin(AccessMixin):
 
     def dispatch(self, request, *args, **kwargs):
         if not self.has_permissions():
-            raise Http404
+            raise PermissionError('Super Admin only can post changes to DB.')
         return super().dispatch(request, *args, **kwargs)
 
 

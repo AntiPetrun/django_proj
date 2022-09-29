@@ -15,19 +15,19 @@ from .forms import LessonForm, CommentForm
 from django.urls import reverse_lazy
 
 
-class CourseListView(ListView):
+class CourseListView(LoginRequiredMixin, ListView):
     """Вывод списка курсов"""
     model = Course
     template_name = 'course/course_list.html'
 
 
-class CourseDetailView(DetailView):
+class CourseDetailView(LoginRequiredMixin, DetailView):
     """Вывод полного описания курса"""
     model = Course
     template_name = 'course/course_detail.html'
 
 
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin, LessonPermissionsMixin, CreateView):
     """Создание нового курса"""
     model = Course
     template_name = 'course/course_form.html'
@@ -35,7 +35,7 @@ class CourseCreateView(CreateView):
     success_url = reverse_lazy('course_list')
 
 
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(LoginRequiredMixin, LessonPermissionsMixin, UpdateView):
     """Изменение курса"""
     model = Course
     template_name = 'course/course_edit.html'
@@ -45,7 +45,7 @@ class CourseUpdateView(UpdateView):
         return reverse_lazy('course_detail', args=(self.object.id,))
 
 
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(LoginRequiredMixin, LessonPermissionsMixin, DeleteView):
     """Удаление курса"""
     model = Course
     template_name = 'course/course_confirm_delete.html'
