@@ -10,7 +10,7 @@ from django.dispatch import receiver
 from datetime import timedelta
 from django.db import models
 from django.utils.datetime_safe import date
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from multiselectfield import MultiSelectField
 
 from Teacher.models import Teacher
@@ -156,7 +156,8 @@ class Course(models.Model):
                                   help_text="Enter start time. Consider the availability of the classroom in the field above.")
     end_time = models.TimeField("End time", null=True, blank=True,
                                 help_text="The field will be filled in automatically after saving")
-    number_of_lessons = models.PositiveSmallIntegerField("Number of lessons", validators=[MaxValueValidator(50)])
+    number_of_lessons = models.PositiveSmallIntegerField("Number of lessons",
+                                                         validators=[MaxValueValidator(50), MinValueValidator(2)])
 
     @property
     def find_end_time(self):
