@@ -80,26 +80,44 @@ class EmailVerify(View):
         return user
 
 
-class SignUp(generic.CreateView):
-    """Регистрация"""
-    form_class = UserCreationForm
-    template_name = 'User/signup.html'
-    success_url = "/courses/lesson/"
+# class SignUp(generic.CreateView):
+#     """Регистрация"""
+#     form_class = UserCreationForm
+#     template_name = 'User/signup.html'
+#     success_url = "/courses/lesson/"
+#
+#     def post(self, request, *args, **kwargs):
+#         form = UserCreationForm(request.POST)
+#
+#         if form.is_valid():
+#             form.save()
+#             email = form.cleaned_data.get('email')
+#             password = form.cleaned_data.get('password1')
+#             user = authenticate(email=email, password=password)
+#             send(request, user)
+#             return redirect('confirm_email')
+#         context = {
+#             'form': form
+#         }
+#         return render(request, self.template_name, context)
 
-    def post(self, request, *args, **kwargs):
+def register(request):
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
-
         if form.is_valid():
-            form.save()
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(email=email, password=password)
-            send(request, user)
+            # Create a new user object but avoid saving it yet
+            new_user = form.save(commit=False)
+            # Set the chosen password
+            new_user.set_password(form.cleaned_data['password1'])
+            # Save the User object
+            new_user.save()
             return redirect('confirm_email')
-        context = {
-            'form': form
-        }
-        return render(request, self.template_name, context)
+    else:
+        form = UserCreationForm()
+    context = {
+                'form': form
+            }
+    return render(request, 'User/signup.html', context)
 
 
 class MyPasswordResetConfirmView(PasswordResetConfirmView):
