@@ -4,7 +4,6 @@ from .models import Location, SubwayStation, Classroom, Schedule
 
 admin.site.register(SubwayStation)
 admin.site.register(Schedule)
-admin.site.register(Location)
 # admin.site.register(Availability)
 # admin.site.register(AvailabilityOccurrence)
 # admin.site.register(ClassroomReservation)
@@ -19,3 +18,9 @@ class ClassroomAdmin(admin.ModelAdmin):
     list_filter = ["location", "is_active"]
 
 
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ['id', "city", "street", "building", "is_active"]
+    ordering = ["-id"]
+    search_fields = ["street", "building"]
+    list_filter = ['id', "city", "street", "building", "is_active"]
