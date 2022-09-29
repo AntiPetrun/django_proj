@@ -6,7 +6,7 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('login/', views.MyLoginView.as_view(), name='login'),
-    path('signup/', views.SignUp.as_view(), name='signup'),
+    path('signup/', views.register, name='signup'),
     path('confirm_email/', TemplateView.as_view(template_name='registration/confirm_email.html'),
          name='confirm_email'),
     path('verify_email/<uidb64>/<token>/', views.EmailVerify.as_view(),
