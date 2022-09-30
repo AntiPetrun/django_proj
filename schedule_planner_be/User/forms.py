@@ -6,13 +6,22 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from .models import User
 from .service import send
+import ctypes
+
+
+def capslock_state():
+    hlldll = ctypes.WinDLL("User32.dll")
+    vk_capital = 0x14
+    return hlldll.GetKeyState(vk_capital)
 
 
 class UserAuthenticationForm(AuthenticationForm):
     def clean(self):
         username = self.cleaned_data.get("username")
         password = self.cleaned_data.get("password")
-
+        capslock = capslock_state()
+        if (capslock & 0xffff) != 0:
+            raise TypeError("\nWARNING:  CAPS LOCK IS ENABLED!\n")
         if username is not None and password:
             self.user_cache = authenticate(
                 self.request, username=username, password=password
@@ -20,7 +29,7 @@ class UserAuthenticationForm(AuthenticationForm):
             if not self.user_cache.email_verify:
                 send(self.request, self.user_cache)
                 raise ValidationError(
-                    'Email not verify, check you email',
+                    'Email not verified, check you email',
                     code='invalid login'
                 )
             if self.user_cache is None:
