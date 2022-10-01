@@ -64,16 +64,16 @@ class Course(models.Model):
         (6, "Saturday"),
         (7, "Sunday"),
     )
-    days_of_week = MultiSelectField("Days of the week", choices=DAYS_OF_WEEK, default="",
-                                    max_choices=7, max_length=63, blank=True)
+    days_of_week = MultiSelectField("Days of the week", choices=DAYS_OF_WEEK,
+                                    max_choices=7, max_length=63)
 
     LESSON_DURATION = (
         (1, 1),
         (2, 2),
         (3, 3),
     )
-    lesson_duration = models.SmallIntegerField("Lesson duration", choices=LESSON_DURATION, null=True,
-                                               blank=True, help_text="hour(s)")
+    lesson_duration = models.SmallIntegerField("Lesson duration", choices=LESSON_DURATION,
+                                               help_text="hour(s)")
 
     @property
     def all_course_days(self):
@@ -150,7 +150,8 @@ class Course(models.Model):
         ("21:00", "21:00"),
     ]
 
-    start_time_options = models.ForeignKey(ClassroomAvailability, on_delete=models.SET_NULL, null=True, default='',
+    start_time_options = models.ForeignKey(ClassroomAvailability, limit_choices_to={'is_free': True},
+                                           on_delete=models.SET_NULL, null=True, default='',
                                            blank=True)
     start_time = models.CharField("Start time", choices=START_TIME_OPTIONS, max_length=9,
                                   help_text="Enter start time. Consider the availability of the classroom in the field above.")
