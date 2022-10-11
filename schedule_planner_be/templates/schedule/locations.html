@@ -23,6 +23,7 @@
                     <th scope="col">Street</th>
                     <th scope="col">Building</th>
                     <th scope="col">Subway</th>
+                    <th scope="col">Is active</th>
                     <th scope="col">Actions to location</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                     <td>{{ location.street }}</td>
                     <td>{{ location.building }}</td>
                     <td>{{ location.subway }}</td>
+                    <td>{{ location.is_active }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'location-detail' location.pk %}">View</a></button>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'edit-location' location.pk %}">Edit</a></button>

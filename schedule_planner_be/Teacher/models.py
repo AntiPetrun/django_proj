@@ -122,3 +122,4 @@ class Teacher(models.Model):
         db_table = "teacher"
         verbose_name = "Преподаватель"
         verbose_name_plural = "Преподаватели"
+        unique_together = ['surname', 'name']

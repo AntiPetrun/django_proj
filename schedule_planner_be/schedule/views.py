@@ -6,7 +6,7 @@ from course.models import Course, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 import csv
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .permissions import LocationPermissionsMixin
 
@@ -62,13 +62,24 @@ class LocationUpdateView(LoginRequiredMixin, LocationPermissionsMixin, UpdateVie
     form_class = LocationForm
 
     def get_success_url(self):
-        return reverse_lazy('location-detail', args=(self.object.id,))
+        return reverse_lazy('locations')
 
 
 class LocationDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-location.html'
     model = Location
+    fields = ['is_active']
     success_url = reverse_lazy('locations')
+
+    def get_queryset(self):
+        locations = Location.objects.filter(is_active=True)
+        return locations
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class LocationDetailView(LoginRequiredMixin, DetailView):
@@ -81,7 +92,7 @@ class LocationCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateVie
     form_class = LocationForm
 
     def get_success_url(self):
-        return reverse_lazy('location-detail', args=(self.object.id,))
+        return reverse_lazy('locations')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -100,13 +111,24 @@ class SubwayStationUpdateView(LoginRequiredMixin, LocationPermissionsMixin, Upda
     form_class = SubwayStationForm
 
     def get_success_url(self):
-        return reverse_lazy('subway-detail', args=(self.object.id,))
+        return reverse_lazy('subways')
 
 
 class SubwayStationDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-subway.html'
     model = SubwayStation
+    fields = ['is_active']
     success_url = reverse_lazy('subways')
+
+    def get_queryset(self):
+        subways = SubwayStation.objects.filter(is_active=True)
+        return subways
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class SubwayStationDetailView(LoginRequiredMixin, DetailView):
@@ -119,7 +141,7 @@ class SubwayStationCreateView(LoginRequiredMixin, LocationPermissionsMixin, Crea
     form_class = SubwayStationForm
 
     def get_success_url(self):
-        return reverse_lazy('subway-detail', args=(self.object.id,))
+        return reverse_lazy('subways')
 
 
 class ClassroomListView(LoginRequiredMixin, ListView):
@@ -130,16 +152,27 @@ class ClassroomListView(LoginRequiredMixin, ListView):
 class ClassroomUpdateView(LoginRequiredMixin, LocationPermissionsMixin, UpdateView):
     template_name = 'schedule/edit-classroom.html'
     model = Classroom
-    form_class = ClassroomForm
+    fields = ['classroom', 'location', 'seats_number', 'pc_number', 'is_active']
 
     def get_success_url(self):
-        return reverse_lazy('classroom-detail', args=(self.object.id,))
+        return reverse_lazy('classrooms')
 
 
 class ClassroomDeleteView(LoginRequiredMixin, LocationPermissionsMixin, DeleteView):
     template_name = 'schedule/delete-classroom.html'
     model = Classroom
+    fields = ['is_active']
     success_url = reverse_lazy('classrooms')
+
+    def get_queryset(self):
+        classrooms = Classroom.objects.filter(is_active=True)
+        return classrooms
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class ClassroomDetailView(LoginRequiredMixin, DetailView):
@@ -152,6 +185,6 @@ class ClassroomCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateVi
     form_class = ClassroomForm
 
     def get_success_url(self):
-        return reverse_lazy('classroom-detail', args=(self.object.id,))
+        return reverse_lazy('classrooms')
 
 

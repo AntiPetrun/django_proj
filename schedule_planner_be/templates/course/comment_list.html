@@ -19,6 +19,7 @@
                     <th scope="col">Created date</th>
                     <th scope="col">Course</th>
                     <th scope="col">Text</th>
+                    <th scope="col">Is active</th>
                     <th scope="col">Actions to course</th>
                 </tr>
             </thead>
@@ -27,7 +28,8 @@
                 <tr>
                     <td>{{ comment.created }}</td>
                     <td>{{ comment.course.course_name }}</td>
-                    <td>{{comment.body}}</td>
+                    <td>{{ comment.body }}</td>
+                    <td>{{ comment.is_active }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comment_detail' comment.pk %}">View</a></button>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comment_edit' comment.pk %}">Edit</a></button>

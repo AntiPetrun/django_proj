@@ -18,7 +18,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('subways/', views.SubwayStationListView.as_view(), name='subways'),
+    path('subways/', views.SubwayStationListView.as_view(), name='subway_list'),
     path('subway/<int:pk>/detail', views.SubwayStationDetailView.as_view(), name='subway-detail'),
     path('add-subway/', views.SubwayStationCreateView.as_view(), name='add-subway'),
     path('delete-subway/<int:pk>/delete', views.SubwayStationDeleteView.as_view(), name='delete-subway'),
