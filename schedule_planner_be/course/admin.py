@@ -22,12 +22,17 @@ class LessonAdmin(admin.ModelAdmin):
     filter_horizontal = ['comment']
 
 
-admin.site.register(Comment)
-
-
 @admin.register(ClassroomAvailability)
 class ClassroomAvailabilityAdmin(admin.ModelAdmin):
     list_display = ["date", "classroom", "start_time", "is_free"]
     ordering = ["date"]
     search_fields = ["date"]
     list_filter = ["date", "classroom", "start_time", "is_free"]
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["course", "user", 'body', 'created', 'is_active']
+    ordering = ['created']
+    search_fields = ["course"]
+    list_filter = ["course", "user", 'body', 'created', 'is_active']

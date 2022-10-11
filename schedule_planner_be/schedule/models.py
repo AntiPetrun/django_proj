@@ -1,8 +1,7 @@
-from datetime import datetime, timedelta, date
+from datetime import timedelta, date
 
 from django.core.validators import RegexValidator
 from django.db import models
-from django.db.backends.signals import connection_created
 from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
@@ -13,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 class SubwayStation(models.Model):
     """Creates model Subway station"""
     station = models.CharField('Subway station', max_length=50, default=None)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f"с/м {self.station}"
@@ -25,10 +25,10 @@ class SubwayStation(models.Model):
 class Location(models.Model):
     """"Creates model Location"""
     city = models.CharField('City', max_length=50, validators=[RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
-            message=_('Use Russian alphabet only, 50 symbols max'),
-            code=_('Use Russian alphabet only, 50 symbols max'))]
-        )
+        regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
+        message=_('Use Russian alphabet only, 50 symbols max'),
+        code=_('Use Russian alphabet only, 50 symbols max'))]
+                            )
     street = models.CharField('Street', max_length=50, validators=[
         RegexValidator(
             regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
@@ -56,15 +56,16 @@ class Location(models.Model):
 class Classroom(models.Model):
     """Creates model Classroom"""
     classroom = models.CharField('Classroom', max_length=50, validators=[RegexValidator(
-            regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
-            message=_('Use Russian alphabet only, 50 symbols max'),
-            code=_('Use Russian alphabet only, 50 symbols max')
-        )])
+        regex="^[-!#$%&'*+./=?^_`{}|~А-яа-я0-9-\s]{1,50}$",
+        message=_('Use Russian alphabet only, 50 symbols max'),
+        code=_('Use Russian alphabet only, 50 symbols max')
+    )])
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, limit_choices_to={'is_active': True},
                                  null=True, verbose_name='Location address')
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
     is_active = models.BooleanField("Active", default=True, blank=True, null=True)
+    tags = models.CharField(max_length=100, help_text="The field will be filled in automatically after saving")
 
     def __str__(self):
         return f"ауд. {self.classroom}, {self.location}"
@@ -73,6 +74,13 @@ class Classroom(models.Model):
         verbose_name = 'Аудитория'
         verbose_name_plural = 'Аудитории'
         unique_together = ('classroom', 'location')
+
+    def get_tags(self):
+        return f"ауд. {self.classroom}, {self.location}"
+
+    def save(self, *args, **kwargs):
+        self.tags = self.get_tags()
+        super(Classroom, self).save(*args, **kwargs)
 
 
 # class Availability(AbstractAvailability):
@@ -138,6 +146,11 @@ class Schedule(models.Model):
 @receiver(post_save, sender=Classroom)
 def classroom_availability(sender, instance, **kwargs):
     """"Creates classroom availabilities for 30 days period after classroom creation"""
+    cur_classrooms = [a['tags'] for a in Classroom.objects.all().values('tags')]
+    cur_cl_in_clavs = [b['classroom'] for b in ClassroomAvailability.objects.all().values('classroom').distinct()]
+    for clav in cur_cl_in_clavs:
+        if clav not in cur_classrooms:
+            ClassroomAvailability.objects.filter(classroom=clav).delete()
     start_range_date = date.today()
     number_of_days = 30
     date_list = []
@@ -147,14 +160,18 @@ def classroom_availability(sender, instance, **kwargs):
     classroom = instance
     start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
                         "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-    for item in date_list:
-        for start_time_option in start_time_range:
-            # available from 8 AM to 22 PM
-            ClassroomAvailability.objects.create(
-                classroom=classroom,
-                date=item,
-                start_time=start_time_option,
-            )
+    if ClassroomAvailability.objects.filter(classroom=classroom):
+        pass
+    if not ClassroomAvailability.objects.filter(classroom=classroom):
+        for item in date_list:
+            for start_time_option in start_time_range:
+                # available from 8 AM to 22 PM
+                ClassroomAvailability.objects.create(
+                    classroom=classroom,
+                    date=item,
+                    start_time=start_time_option,
+                    is_free=True
+                )
 
 
 @receiver(post_save, sender=Lesson)

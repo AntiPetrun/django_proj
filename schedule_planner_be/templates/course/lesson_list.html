@@ -60,7 +60,8 @@
                     <th scope="col">Topic</th>
                     <th scope="col">Date</th>
                     <th scope="col">Start time</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Was held</th>
+                     <th scope="col">Is active</th>
 <!--                    <th scope="col">Comment</th>-->
                     <th scope="col">Comments to lesson</th>
                     <th scope="col">Actions to lesson</th>
@@ -78,6 +79,7 @@
                         <td>{{ lesson.date }}</td>
                         <td>{{ lesson.start_time }}</td>
                         <td>{{ lesson.was_held }}</td>
+                        <td>{{ lesson.is_active }}</td>
 <!--                        <td>{{ lesson.comment }}</td>-->
                         <td>
                             <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comment_form' %}">Add comment to current course</a></button>

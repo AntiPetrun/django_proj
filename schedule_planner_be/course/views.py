@@ -2,11 +2,10 @@ import csv
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from Teacher.models import Teacher
 from .models import Course, Comment, Lesson
-
 
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -39,10 +38,11 @@ class CourseUpdateView(LoginRequiredMixin, LessonPermissionsMixin, UpdateView):
     """Изменение курса"""
     model = Course
     template_name = 'course/course_edit.html'
-    fields = '__all__'
+    fields = ["course_name", "teacher", "location", "start_date", "days_of_week", 'start_time_options', "start_time",
+              'lesson_duration', "number_of_lessons", 'is_active']
 
     def get_success_url(self):
-        return reverse_lazy('course_detail', args=(self.object.id,))
+        return reverse_lazy('course_list')
 
 
 class CourseDeleteView(LoginRequiredMixin, LessonPermissionsMixin, DeleteView):
@@ -51,6 +51,16 @@ class CourseDeleteView(LoginRequiredMixin, LessonPermissionsMixin, DeleteView):
     template_name = 'course/course_confirm_delete.html'
     fields = '__all__'
     success_url = reverse_lazy('course_list')
+
+    def get_queryset(self):
+        courses = Course.objects.filter(is_active=True)
+        return courses
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CommentListView(ListView):
@@ -77,6 +87,16 @@ class CommentDeleteView(UserPassesTestMixin, DeleteView):
     def test_func(self):
         obj = self.get_object()
         return obj.user == self.request.user
+
+    def get_queryset(self):
+        comments = Comment.objects.filter(is_active=True)
+        return comments
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class CommentUpdateView(UserPassesTestMixin, UpdateView):
@@ -180,7 +200,8 @@ class LessonUpdateView(LoginRequiredMixin, LessonPermissionsMixin, UpdateView):
     """Изменение занятия"""
     model = Lesson
     template_name = 'course/lesson_edit.html'
-    fields = '__all__'
+    fields = ["date", "start_time", "number", "course", 'teacher', "topic",
+              "description", 'comment', 'was_held', 'is_active']
     success_url = "/courses/lesson/"
 
 
@@ -188,8 +209,18 @@ class LessonDeleteView(LoginRequiredMixin, LessonPermissionsMixin, DeleteView):
     """Удаление занятия"""
     model = Lesson
     template_name = 'course/lesson_confirm_delete.html'
-    fields = '__all__'
+    fields = 'is_active'
     success_url = "/courses/lesson/"
+
+    def get_queryset(self):
+        lessons = Lesson.objects.filter(is_active=True)
+        return lessons
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class FilterLessonView(LoginRequiredMixin, GetValuesFoFilters, ListView):

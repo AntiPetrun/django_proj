@@ -23,6 +23,7 @@
                     <th scope="col">Location address</th>
                     <th scope="col">Seats number</th>
                     <th scope="col">PC number</th>
+                    <th scope="col">Is active</th>
                     <th scope="col">Actions to locations</th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                     <td>{{ classroom.location }}</td>
                     <td>{{ classroom.seats_number }}</td>
                     <td>{{ classroom.pc_number }}</td>
+                    <td>{{ classroom.is_active }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'classroom-detail' classroom.pk %}">View</a></button>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'edit-classroom' classroom.pk %}">Edit</a></button>
