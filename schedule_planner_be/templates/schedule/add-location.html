@@ -8,6 +8,7 @@
 <form action='' method='post'>
     {% csrf_token %}
     {{ form|crispy }}
-    <input type='submit' value='Add'>
+    <input class="btn btn-primary" type="submit" value="Save changes"/>
+    <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
 </form>
 {% endblock %}
