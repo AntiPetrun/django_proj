@@ -6,6 +6,7 @@
 <h1>Вы уверены, что хотите удалить занятие {{ lesson.topic }}?</h1>
 <form method='post'>
     {% csrf_token %}
-    <input type='submit' value='Удалить'>
+    <input class="btn btn-primary" type="submit" value="Confirm"/>
+    <button onclick="window.history.back();" class="btn btn-default" type="button">Cancel</button>
 </form>
 {% endblock %}

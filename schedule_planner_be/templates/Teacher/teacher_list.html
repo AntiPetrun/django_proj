@@ -21,6 +21,7 @@
                     <th scope="col">Status</th>
                     <th scope="col">Teaching course</th>
                     <th scope="col">Teacher Profile</th>
+                    <th scope="col">Is active</th>
                 </tr>
             </thead>
             {% for teacher in teacher_list %}
@@ -30,6 +31,7 @@
                     <td>{{ teacher.specialization }}</td>
                     <td>{{ teacher.is_active }}</td>
                     <td>{{ teacher.course_name }}</td>
+                    <td>{{ teacher.is_active }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'teacher_detail' teacher.pk %}">View</a></button>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'teacher_edit' teacher.pk %}">Edit</a></button>
