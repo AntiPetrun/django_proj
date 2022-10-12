@@ -22,10 +22,12 @@
                     <th scope="col">Name</th>
                     <th scope="col">Type</th>
                     <th scope="col">Start day</th>
+                    <th scope="col">Start day of week</th>
                     <th scope="col">Days of week</th>
                     <th scope="col">Start time</th>
                     <th scope="col">Location</th>
                     <th scope="col">Number of lessons</th>
+                    <th scope="col">Lesson duration</th>
                     <th scope="col">Is active</th>
                     <th scope="col">Comments to course</th>
                     <th scope="col">Actions to course</th>
@@ -37,10 +39,12 @@
                     <td>{{ course.course_name }}</td>
                     <td>{{ course.course_type }}</td>
                     <td>{{ course.start_date }}</td>
+                    <td>{{ course.start_day_of_week }}</td>
                     <td>{{ course.days_of_week }}</td>
                     <td>{{ course.start_time }}</td>
                     <td>{{ course.location }}</td>
                     <td>{{ course.number_of_lessons }}</td>
+                    <td>{{ course.lesson_duration }}</td>
                     <td>{{ course.is_active }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'comment_form' %}">Add comment</a></button>

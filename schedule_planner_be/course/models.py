@@ -1,5 +1,7 @@
 import itertools
 from datetime import date, time, datetime
+
+
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django_currentuser.middleware import (
@@ -8,7 +10,7 @@ from django_currentuser.db.models import CurrentUserField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from datetime import timedelta
-from django.db import models
+from django.db import models, IntegrityError
 from django.utils.datetime_safe import date
 from django.core.validators import MaxValueValidator, MinValueValidator
 from multiselectfield import MultiSelectField
@@ -225,170 +227,184 @@ def create_lessons(sender, instance, **kwargs):
     if Lesson.objects.filter(course=course):
         Lesson.objects.filter(course=course).delete()
     if not Lesson.objects.filter(course=course):
-        teacher = course.teacher
-        location = course.location
-        start_time = course.start_time
-        end_time = course.end_time
-        is_active = course.is_active
-        number = 1
-        for dates in course.all_course_days:
-            index = course.all_course_days.index(dates)
-            if number == len(course.all_course_dates) + 1:
-                break
-            else:
-                if index == 0:
-                    if course.lesson_duration == 1:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_start_day=True, is_active=is_active)
-                    if course.lesson_duration == 2:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_start_day=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, for_time_slot=True, is_active=is_active)
-                    if course.lesson_duration == 3:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_start_day=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, end_time=end_time,
-                                                      for_time_slot=True, is_active=is_active)
-                                start_time3 = start_time_range[start_time_range.index(i) + 2]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time3, for_time_slot=True, is_active=is_active)
-                if index == len(course.all_course_dates) - 3:
-                    if course.lesson_duration == 1:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_end_day=True, is_active=is_active)
-                    if course.lesson_duration == 2:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_end_day=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, for_time_slot=True, is_active=is_active)
-                    if course.lesson_duration == 3:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_end_day=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, end_time=end_time,
-                                                      for_time_slot=True, is_active=is_active)
-                                start_time3 = start_time_range[start_time_range.index(i) + 2]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time3, for_time_slot=True, is_active=is_active)
-                if index == len(course.all_course_dates) - 2:
-                    if course.lesson_duration == 1:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_1=True, is_active=is_active)
-                    if course.lesson_duration == 2:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_1=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, for_time_slot=True, is_active=is_active)
-                    if course.lesson_duration == 3:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_1=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, end_time=end_time,
-                                                      for_time_slot=True, is_active=is_active)
-                                start_time3 = start_time_range[start_time_range.index(i) + 2]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time3, for_time_slot=True, is_active=is_active)
-                if index == len(course.all_course_dates) - 1:
-                    if course.lesson_duration == 1:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_2=True, is_active=is_active)
-                    if course.lesson_duration == 2:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_2=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, for_time_slot=True, is_active=is_active)
-                    if course.lesson_duration == 3:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time,
-                                              is_transit_day_2=True, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, end_time=end_time,
-                                                      for_time_slot=True, is_active=is_active)
-                                start_time3 = start_time_range[start_time_range.index(i) + 2]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time3, for_time_slot=True, is_active=is_active)
-                if dates in course.all_course_dates[1:len(course.all_course_dates) - 3]:
-                    if course.lesson_duration == 1:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
-                    if course.lesson_duration == 2:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, for_time_slot=True, is_active=is_active)
-                    if course.lesson_duration == 3:
-                        Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                              date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
-                        start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
-                                            "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
-                        for i in start_time_range:
-                            if i == course.start_time:
-                                start_time2 = start_time_range[start_time_range.index(i) + 1]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time2, end_time=end_time,
-                                                      for_time_slot=True, is_active=is_active)
-                                start_time3 = start_time_range[start_time_range.index(i) + 2]
-                                Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
-                                                      date=dates, start_time=start_time3, for_time_slot=True, is_active=is_active)
-                number += 1
+        try:
+            teacher = course.teacher
+            location = course.location
+            start_time = course.start_time
+            end_time = course.end_time
+            is_active = course.is_active
+            number = 1
+            for dates in course.all_course_days:
+                index = course.all_course_days.index(dates)
+                if number == len(course.all_course_dates) + 1:
+                    break
+                else:
+                    if index == 0:
+                        if course.lesson_duration == 1:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_start_day=True, is_active=is_active)
+                        if course.lesson_duration == 2:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_start_day=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, for_time_slot=True,
+                                                          is_active=is_active)
+                        if course.lesson_duration == 3:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_start_day=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, end_time=end_time,
+                                                          for_time_slot=True, is_active=is_active)
+                                    start_time3 = start_time_range[start_time_range.index(i) + 2]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time3, for_time_slot=True,
+                                                          is_active=is_active)
+                    if index == len(course.all_course_dates) - 3:
+                        if course.lesson_duration == 1:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_end_day=True, is_active=is_active)
+                        if course.lesson_duration == 2:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_end_day=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, for_time_slot=True,
+                                                          is_active=is_active)
+                        if course.lesson_duration == 3:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_end_day=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, end_time=end_time,
+                                                          for_time_slot=True, is_active=is_active)
+                                    start_time3 = start_time_range[start_time_range.index(i) + 2]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time3, for_time_slot=True,
+                                                          is_active=is_active)
+                    if index == len(course.all_course_dates) - 2:
+                        if course.lesson_duration == 1:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_1=True, is_active=is_active)
+                        if course.lesson_duration == 2:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_1=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, for_time_slot=True,
+                                                          is_active=is_active)
+                        if course.lesson_duration == 3:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_1=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, end_time=end_time,
+                                                          for_time_slot=True, is_active=is_active)
+                                    start_time3 = start_time_range[start_time_range.index(i) + 2]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time3, for_time_slot=True,
+                                                          is_active=is_active)
+                    if index == len(course.all_course_dates) - 1:
+                        if course.lesson_duration == 1:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_2=True, is_active=is_active)
+                        if course.lesson_duration == 2:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_2=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, for_time_slot=True,
+                                                          is_active=is_active)
+                        if course.lesson_duration == 3:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time,
+                                                  is_transit_day_2=True, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, end_time=end_time,
+                                                          for_time_slot=True, is_active=is_active)
+                                    start_time3 = start_time_range[start_time_range.index(i) + 2]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time3, for_time_slot=True,
+                                                          is_active=is_active)
+                    if dates in course.all_course_dates[1:len(course.all_course_dates) - 3]:
+                        if course.lesson_duration == 1:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
+                        if course.lesson_duration == 2:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, for_time_slot=True,
+                                                          is_active=is_active)
+                        if course.lesson_duration == 3:
+                            Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                  date=dates, start_time=start_time, end_time=end_time, is_active=is_active)
+                            start_time_range = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+                                                "16:00", "17:00", "18:00", "19:00", "20:00", "21:00"]
+                            for i in start_time_range:
+                                if i == course.start_time:
+                                    start_time2 = start_time_range[start_time_range.index(i) + 1]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time2, end_time=end_time,
+                                                          for_time_slot=True, is_active=is_active)
+                                    start_time3 = start_time_range[start_time_range.index(i) + 2]
+                                    Lesson.objects.create(number=number, course=course, teacher=teacher, location=location,
+                                                          date=dates, start_time=start_time3, for_time_slot=True,
+                                                          is_active=is_active)
+                    number += 1
+        except IntegrityError:
+            course.delete()
+            raise ValueError('Change your dates or lesson duration. Some lessons overlap.')
 
 
 class Comment(models.Model):
@@ -408,7 +424,7 @@ class Comment(models.Model):
         return f'{self.body}'
 
 
-class Lesson(models.Model):
+class Lesson(models.Model, BaseException):
     """Создание модели занятия"""
     START_TIME_OPTIONS = [
         ("08:00", "08:00"),
