@@ -31,7 +31,6 @@ class CourseCreateView(LoginRequiredMixin, LessonPermissionsMixin, CreateView):
     model = Course
     template_name = 'course/course_form.html'
     fields = '__all__'
-    success_url = reverse_lazy('course_list')
 
 
 class CourseUpdateView(LoginRequiredMixin, LessonPermissionsMixin, UpdateView):
