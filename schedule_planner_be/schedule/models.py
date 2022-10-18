@@ -65,7 +65,7 @@ class Classroom(models.Model):
     seats_number = models.PositiveSmallIntegerField("Number of seats")
     pc_number = models.PositiveSmallIntegerField("Number of PCs")
     is_active = models.BooleanField("Active", default=True, blank=True, null=True)
-    tags = models.CharField(max_length=100, help_text="The field will be filled in automatically after saving")
+    tags = models.CharField(max_length=100, help_text="The field will be filled in automatically after saving", blank=True)
 
     def __str__(self):
         return f"ауд. {self.classroom}, {self.location}"

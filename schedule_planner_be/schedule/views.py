@@ -182,7 +182,8 @@ class ClassroomDetailView(LoginRequiredMixin, DetailView):
 
 class ClassroomCreateView(LoginRequiredMixin, LocationPermissionsMixin, CreateView):
     template_name = 'schedule/add-classroom.html'
-    form_class = ClassroomForm
+    model = Classroom
+    fields = ['classroom', 'location', 'seats_number', 'pc_number', 'is_active']
 
     def get_success_url(self):
         return reverse_lazy('classrooms')
