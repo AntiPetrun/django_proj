@@ -1,20 +1,42 @@
 {% extends 'layout/basic.html' %}
 
-{% block title %}Станции метро{% endblock %}
+{% block title %}SubwayStation{% endblock %}
 
 {% block content %}
-    <h1>Список станций метро</h1>
-
-    {% if subwaystation_list %}
-    <ul>
-        {% for station in subwaystation_list %}
-        <li>
-            <a href="{% url 'subway-detail' station.pk %}">{{ station }}</a>
-        </li>
-
-        {% endfor %}
-    </ul>
-    {% else %}
-        <p>Станции метро отсутствуют.</p>
-    {% endif %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Subway stations</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'add-subway' %}">Add subway station</a></button>
+        </div>
+    </div>
+</div>
+{% if subwaystation_list %}
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Station</th>
+                    <th scope="col">Is active</th>
+                    <th scope="col">Actions to subway station</th>
+                </tr>
+            </thead>
+            {% for station in subwaystation_list %}
+            <tbody>
+                <tr>
+                    <td>{{ station.station }}</td>
+                    <td>{{ station.is_active }}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'subway-detail' station.pk %}">View</a></button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'edit-subway' station.pk %}">Edit</a></button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary"><a href="{% url 'delete-subway' station.pk %}">Delete</a></button>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+{% else %}
+    <p>Subway station doesn't exist.</p>
+{% endif %}
 {% endblock %}

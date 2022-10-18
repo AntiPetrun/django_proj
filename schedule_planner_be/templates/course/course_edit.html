@@ -10,6 +10,6 @@
     {{ form|crispy }}
     <input class="btn btn-success" type="submit" value="Save changes"/>
     <a class="btn btn-danger" href="{% url 'course_edit' course.pk %}" role="button">Cancel changes</a>
-    <button onclick="window.history.back();" class="btn btn-info" type="button">Back to courses</button>
+    <a class="btn btn-info" href="{% url 'course_list' %}" role="button">Back to courses</a>
 </form>
 {% endblock %}

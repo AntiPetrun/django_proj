@@ -9,6 +9,7 @@
     {% csrf_token %}
     {{ form|crispy }}
     <input class="btn btn-success" type="submit" value="Save changes"/>
-    <button onclick="window.history.back();" class="btn btn-info" type="button">Back to location addresses</button>
+    <a class="btn btn-danger" href="{% url 'edit-location' location.pk %}" role="button">Cancel changes</a>
+    <a class="btn btn-info" href="{% url 'locations' %}" role="button">Back to location addresses</a>
 </form>
 {% endblock %}
