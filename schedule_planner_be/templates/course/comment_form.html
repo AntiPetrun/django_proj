@@ -9,6 +9,7 @@
     {% csrf_token %}
     {{ form|crispy }}
     <input class="btn btn-success" type="submit" value="Save changes"/>
-    <button onclick="window.history.back();" class="btn btn-info" type="button">Back to comments</button>
+    <a class="btn btn-danger" href="{% url 'comment_form' %}" role="button">Cancel changes</a>
+    <a class="btn btn-info" href="{% url 'comment_list' %}" role="button">Back to all comments</a>
 </form>
 {% endblock %}

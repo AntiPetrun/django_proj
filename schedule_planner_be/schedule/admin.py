@@ -10,7 +10,7 @@ admin.site.register(Schedule)
 
 @admin.register(SubwayStation)
 class SubwayStationAdmin(admin.ModelAdmin):
-    list_display = ['station', "is_active"]
+    list_display = ['id', 'station', "is_active"]
     ordering = ["-id"]
     search_fields = ["station"]
     list_filter = ["station", "is_active"]
