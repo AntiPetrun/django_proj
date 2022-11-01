@@ -1,5 +1,9 @@
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework.validators import UniqueTogetherValidator
+from django.utils.translation import gettext_lazy as _
 
 from course.models import Course
 
