@@ -1,6 +1,7 @@
 import itertools
 from datetime import date, time, datetime
 
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django_currentuser.middleware import (
@@ -202,7 +203,6 @@ class Course(models.Model):
             raise ValueError('Change your start time for earlier or lesson duration for less.')
         super(Course, self).save(*args, **kwargs)
 
-
     def __str__(self):
         return f"{self.course_name}, {self.start_date}, {self.start_time}, {self.location}"
 
@@ -211,12 +211,16 @@ class Course(models.Model):
         verbose_name_plural = "Курсы"
         unique_together = ('start_date', 'location', 'start_time')
 
+    def get_absolute_url(self):
+        return reverse('course_detail', kwargs={'pk': self.pk})
+
 
 @receiver(post_save, sender=Course)
 def validate_days_of_week(sender, instance, **kwargs):
     """"Validates that the start date is in chosen days of week for the course"""
     course = instance
-    if str(course.start_date.isoweekday()) not in course.days_of_week:
+    days = [str(i) for i in course.days_of_week]
+    if str(course.start_date.isoweekday()) not in days:
         course.delete()
         raise ValidationError(
             _('Chosen days of week do not include start day of week'),
