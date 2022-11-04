@@ -16,5 +16,5 @@ class CommentViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [IsAuthenticated & CommentPermissionsMixin & IsOwnerOrReadOnly]
+            permission_classes = [IsAuthenticated & CommentPermissionsMixin]
         return [permission() for permission in permission_classes]

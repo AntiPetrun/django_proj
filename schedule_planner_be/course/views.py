@@ -77,7 +77,7 @@ class CommentCreateView(CreateView):
         return reverse_lazy('comment_detail', args=(self.object.id,))
 
 
-class CommentDeleteView(UserPassesTestMixin, DeleteView):
+class CommentDeleteView(LoginRequiredMixin, LessonPermissionsMixin, DeleteView):
     """Удаление комментария"""
     template_name = 'course/comment_confirm_delete.html'
     model = Comment

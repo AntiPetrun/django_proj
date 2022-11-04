@@ -3,7 +3,7 @@ from rest_framework import permissions
 
 class CommentPermissionsMixin(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.role == 'Super Admin'
+        return request.user.role == 'Super Admin' or request.user.role == 'Administrator'
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -20,3 +20,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Instance must have an attribute named `owner`.
         return obj.user == request.user
+
+
+
+
