@@ -2,7 +2,9 @@ import csv
 
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+
 from .serializers import *
 from course.models import Lesson
 from .permissions import LessonPermissionsMixin
@@ -71,6 +73,15 @@ class LessonDeleteView(generics.DestroyAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonDetailSerializer
     permission_classes = [IsAuthenticated & LessonPermissionsMixin]
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.is_active = False
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_200_OK)
+
+    def perform_destroy(self, instance):
+        instance.save()
 
 
 def csv_lessons_list_write(request):
